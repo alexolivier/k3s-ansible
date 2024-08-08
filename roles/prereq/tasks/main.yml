@@ -60,10 +60,34 @@
 
 - name: Add /usr/local/bin to sudo secure_path
   lineinfile:
-    line: 'Defaults    secure_path = {{ secure_path[ansible_os_family] }}'
+    line: "Defaults    secure_path = {{ secure_path[ansible_os_family] }}"
     regexp: "Defaults(\\s)*secure_path(\\s)*="
     state: present
     insertafter: EOF
     path: /etc/sudoers
-    validate: 'visudo -cf %s'
+    validate: "visudo -cf %s"
   when: ansible_os_family in [ "RedHat", "Suse" ]
+
+- name: Set fs.inotify.max_user_watches
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: "2099999999"
+    state: present
+    reload: true
+  tags: sysctl
+
+- name: Set fs.inotify.max_user_instances
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: "2099999999"
+    state: present
+    reload: true
+  tags: sysctl
+
+- name: Set fs.inotify.max_queued_events
+  ansible.posix.sysctl:
+    name: fs.inotify.max_queued_events
+    value: "2099999999"
+    state: present
+    reload: true
+  tags: sysctl
