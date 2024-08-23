@@ -91,3 +91,7 @@
     state: present
     reload: true
   tags: sysctl
+
+- name: Install NFS
+  ansible.builtin.apt:
+    name: nfs-common
